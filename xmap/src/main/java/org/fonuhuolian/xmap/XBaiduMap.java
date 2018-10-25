@@ -21,14 +21,13 @@ public class XBaiduMap {
     public static Intent baiDuRoutePlanning(String endPointName, String endPointLat,
                                             String endPointLon, XBaiDuMapMode mode) {
 
-        String startingPoint = "";
         String endPoint = "";
 
         if (!TextUtils.isEmpty(endPointLat) && !TextUtils.isEmpty(endPointLon)) {
-            startingPoint = endPointLat + "," + endPointLon;
+            endPoint = endPointLat + "," + endPointLon;
         }
 
-        return baiDuRoutePlanning("", startingPoint, endPointName, endPoint, mode);
+        return baiDuRoutePlanning("", "", endPointName, endPoint, mode);
     }
 
     public static Intent baiDuRoutePlanning(String startingPointName,
@@ -44,7 +43,7 @@ public class XBaiduMap {
         }
 
         if (!TextUtils.isEmpty(endPointLat) && !TextUtils.isEmpty(endPointLon)) {
-            startingPoint = endPointLat + "," + endPointLon;
+            endPoint = endPointLat + "," + endPointLon;
         }
 
         return baiDuRoutePlanning(startingPointName, startingPoint, endPointName, endPoint, mode);
