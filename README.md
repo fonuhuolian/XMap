@@ -39,4 +39,5 @@ amapPlanning(String startingPointName, String startingPointLat, String startingP
 
 > 效果
 
-![效果](https://github.com/fonuhuolian/XMap/blob/master/screenshot/a.jpg?raw=true)  ![效果](https://github.com/fonuhuolian/XMap/blob/master/screenshot/a.jpg?raw=true)
+![效果](https://github.com/fonuhuolian/XMap/blob/master/screenshot/a.jpg?raw=true)
+![效果](https://github.com/fonuhuolian/XMap/blob/master/screenshot/b.jpg?raw=true)
