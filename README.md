@@ -42,5 +42,5 @@ getLongDistance(double lon1, double lat1, double lon2, double lat2);
 
 > 效果
 
-![效果](https://github.com/fonuhuolian/XMap/blob/master/screenshot/a.jpg?raw=true)
-![效果](https://github.com/fonuhuolian/XMap/blob/master/screenshot/b.jpg?raw=true)
+![效果](https://github.com/fonuhuolian/XMap/blob/master/screenshot/a.png?raw=true)
+![效果](https://github.com/fonuhuolian/XMap/blob/master/screenshot/b.png?raw=true)
