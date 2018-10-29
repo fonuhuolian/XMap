@@ -9,15 +9,15 @@ import java.text.DecimalFormat;
 public class XMapUtil {
 
 
-    private double DEF_PI = 3.14159265359; // PI
-    private double DEF_2PI = 6.28318530712; // 2*PI
-    private double DEF_PI180 = 0.01745329252; // PI/180.0
-    private double DEF_R = 6370693.5; // radius of earth
+    private static double DEF_PI = 3.14159265359; // PI
+    private static double DEF_2PI = 6.28318530712; // 2*PI
+    private static double DEF_PI180 = 0.01745329252; // PI/180.0
+    private static double DEF_R = 6370693.5; // radius of earth
 
     /**
-     * 返回为m，适合短距离测量
+     * distance为m(并根据数值自动转换为m或km)，适合短距离测量
      */
-    public String getShortDistance(double lon1, double lat1, double lon2, double lat2) {
+    public static String getShortDistance(double lon1, double lat1, double lon2, double lat2) {
         double ew1, ns1, ew2, ns2;
         double dx, dy, dew;
         double distance;
@@ -41,9 +41,9 @@ public class XMapUtil {
     }
 
     /**
-     * 返回为m,适合长距离测量
+     * distance为m(并根据数值自动转换为m或km)l,适合长距离测量
      */
-    public String getLongDistance(double lon1, double lat1, double lon2, double lat2) {
+    public static String getLongDistance(double lon1, double lat1, double lon2, double lat2) {
         double ew1, ns1, ew2, ns2;
         double distance;
         // 角度转换为弧度
@@ -64,13 +64,13 @@ public class XMapUtil {
         return trans(distance);
     }
 
-    private String trans(double distance) {
+    private static String trans(double distance) {
         boolean isBig = false; // 是否为大于等于1000m
         if (distance >= 1000) {
             distance /= 1000;
             isBig = true;
         }
-        return (new DecimalFormat(".00").format(distance)) + (isBig ? "千米" : "米");
+        return (new DecimalFormat(".00").format(distance)) + (isBig ? "km" : "m");
     }
 
 
