@@ -16,7 +16,7 @@ allprojects {
 ```
 `module build.gradle `
 ```
- implementation 'com.github.fonuhuolian:XMap:1.0.4'
+ implementation 'com.github.fonuhuolian:XMap:1.0.5'
 ```
 
 > 混淆
@@ -29,15 +29,14 @@ allprojects {
 
 ```
 
-// XBaiduMap(百度地图相关)、XAMap(高德地图相关)、XTencentMap(腾讯地图相关)
 // 是否安装了地图
-isInstallBaiDuMap(Context context);
+XMapUtil.checkMapExist(Context context, XMapMode map);
 // 线路规划
-amapPlanning(String startingPointName, String startingPointLat, String startingPointLon,
-                String endPointName, String endPointLat, String endPointLon, XAMapMode mode)
+XMapUtil.xMapPlanning(String startingPointName, String startingPointLat, String startingPointLon,
+                                                           String endPointName, String endPointLat, String endPointLon, XMapMode map, XMapTravelMode mode);
+XMapUtil.xMapPlanningByAutoLocation(String endPointName, String endPointLat, String endPointLon, XMapMode map, XMapTravelMode mode);
 // 测量两点之间的距离（返回值小于1000 则为xx m 如果大于1000则为xx km）
-getShortDistance(double lon1, double lat1, double lon2, double lat2);
-getLongDistance(double lon1, double lat1, double lon2, double lat2);
+XMapUtil.getDistance(double lon1, double lat1, double lon2, double lat2);
 ```
 
 > 效果

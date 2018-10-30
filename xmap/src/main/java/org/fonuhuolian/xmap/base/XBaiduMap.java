@@ -1,25 +1,19 @@
-package org.fonuhuolian.xmap;
+package org.fonuhuolian.xmap.base;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+
+import org.fonuhuolian.xmap.XMapTravelMode;
 
 /**
  * http://lbsyun.baidu.com/index.php?title=uri/api/android
  */
 public class XBaiduMap {
 
-    /**
-     * 是否安装百度地图
-     */
-    public static boolean isInstallBaiDuMap(Context context) {
-        return XMapUtil.checkApkExist(context, "com.baidu.BaiduMap");
-    }
-
 
     public static Intent baiDuRoutePlanning(String endPointName, String endPointLat,
-                                            String endPointLon, XBaiDuMapMode mode) {
+                                            String endPointLon, XMapTravelMode mode) {
 
         String endPoint = "";
 
@@ -33,7 +27,7 @@ public class XBaiduMap {
     public static Intent baiDuRoutePlanning(String startingPointName,
                                             String startingPointLat, String startingPointLon,
                                             String endPointName,
-                                            String endPointLat, String endPointLon, XBaiDuMapMode mode) {
+                                            String endPointLat, String endPointLon, XMapTravelMode mode) {
 
         String startingPoint = "";
         String endPoint = "";
@@ -51,7 +45,12 @@ public class XBaiduMap {
 
     // 获得百度地图路线规划的Intent
     // 起点名称或经纬度，或者可同时提供名称和经纬度，此时经纬度优先级高
-    private static Intent baiDuRoutePlanning(String startingPointName, String startingPoint, String endPointName, String endPoint, XBaiDuMapMode mode) {
+    private static Intent baiDuRoutePlanning(String startingPointName, String startingPoint, String endPointName, String endPoint, XMapTravelMode mode) {
+
+
+        if (!mode.getMapName().equals("百度")) {
+            throw new RuntimeException("选择的出行模式与调用的地图不符");
+        }
 
         StringBuffer buffer = new StringBuffer("baidumap://map/direction?");
 

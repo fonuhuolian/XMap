@@ -1,30 +1,30 @@
-package org.fonuhuolian.xmap;
+package org.fonuhuolian.xmap.base;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+
+import org.fonuhuolian.xmap.XMapTravelMode;
 
 /**
  * https://lbs.qq.com/uri_v1/index.html
  */
 public class XTencentMap {
 
-    /**
-     * 是否安装腾讯地图
-     */
-    public static boolean isInstallTencentMap(Context context) {
-        return XMapUtil.checkApkExist(context, "com.tencent.map");
-    }
 
-    public static Intent tencentPlanning(String endPointName, String endPointLat, String endPointLon, XTencentMode mode) {
+    public static Intent tencentPlanning(String endPointName, String endPointLat, String endPointLon, XMapTravelMode mode) {
         return tencentPlanning("", "", "", endPointName,
                 endPointLat, endPointLon, mode);
     }
 
     // 获得高德地图路线规划的Intent
     public static Intent tencentPlanning(String startingPointName, String startingPointLat, String startingPointLon,
-                                         String endPointName, String endPointLat, String endPointLon, XTencentMode mode) {
+                                         String endPointName, String endPointLat, String endPointLon, XMapTravelMode mode) {
+
+
+        if (!mode.getMapName().equals("百度")) {
+            throw new RuntimeException("选择的出行模式与调用的地图不符");
+        }
 
         StringBuffer buffer = new StringBuffer("qqmap://map/routeplan?");
 

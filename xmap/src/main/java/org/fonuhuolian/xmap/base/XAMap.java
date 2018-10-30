@@ -1,30 +1,29 @@
-package org.fonuhuolian.xmap;
+package org.fonuhuolian.xmap.base;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+
+import org.fonuhuolian.xmap.XMapTravelMode;
 
 /**
  * https://lbs.amap.com/api/amap-mobile/summary
  */
 public class XAMap {
 
-    /**
-     * 是否安装高德地图
-     */
-    public static boolean isInstallAMap(Context context) {
-        return XMapUtil.checkApkExist(context, "com.autonavi.minimap");
-    }
 
-    public static Intent amapPlanning(String endPointName, String endPointLat, String endPointLon, XAMapMode mode) {
+    public static Intent amapPlanning(String endPointName, String endPointLat, String endPointLon, XMapTravelMode mode) {
         return amapPlanning("", "", "",
                 endPointName, endPointLat, endPointLon, mode);
     }
 
     // 获得高德地图路线规划的Intent
     public static Intent amapPlanning(String startingPointName, String startingPointLat, String startingPointLon,
-                                      String endPointName, String endPointLat, String endPointLon, XAMapMode mode) {
+                                      String endPointName, String endPointLat, String endPointLon, XMapTravelMode mode) {
+
+        if (!mode.getMapName().equals("高德")) {
+            throw new RuntimeException("选择的出行模式与调用的地图不符");
+        }
 
         StringBuffer buffer = new StringBuffer("amapuri://route/plan/?");
 
