@@ -22,7 +22,7 @@ public class XTencentMap {
                                          String endPointName, String endPointLat, String endPointLon, XMapTravelMode mode) {
 
 
-        if (!mode.getMapName().equals("百度")) {
+        if (!mode.getMapName().equals("腾讯")) {
             throw new RuntimeException("选择的出行模式与调用的地图不符");
         }
 
