@@ -45,9 +45,9 @@ public class XTencentMap {
 
         if (!TextUtils.isEmpty(startingPointLat) && !TextUtils.isEmpty(startingPointLon)) {
             buffer.append("fromcoord=");
-            buffer.append(XMapUtil.covertGPSLat(new XGPS(Double.parseDouble(startingPointLat), Double.parseDouble(startingPointLon)), system, XMapMode.XAMAP));
+            buffer.append(XMapUtil.covertGPSLat(new XGPS(Double.parseDouble(startingPointLat), Double.parseDouble(startingPointLon)), system, XMapMode.XTENCENT));
             buffer.append(",");
-            buffer.append(XMapUtil.covertGPSLon(new XGPS(Double.parseDouble(startingPointLat), Double.parseDouble(startingPointLon)), system, XMapMode.XAMAP));
+            buffer.append(XMapUtil.covertGPSLon(new XGPS(Double.parseDouble(startingPointLat), Double.parseDouble(startingPointLon)), system, XMapMode.XTENCENT));
         } else {
             buffer.append("fromcoord=CurrentLocation");
         }
@@ -66,9 +66,9 @@ public class XTencentMap {
             throw new RuntimeException("终点的经纬度不能为空");
         }
 
-        buffer.append(XMapUtil.covertGPSLat(new XGPS(Double.parseDouble(endPointLat), Double.parseDouble(endPointLon)), system, XMapMode.XAMAP));
+        buffer.append(XMapUtil.covertGPSLat(new XGPS(Double.parseDouble(endPointLat), Double.parseDouble(endPointLon)), system, XMapMode.XTENCENT));
         buffer.append(",");
-        buffer.append(XMapUtil.covertGPSLon(new XGPS(Double.parseDouble(endPointLat), Double.parseDouble(endPointLon)), system, XMapMode.XAMAP));
+        buffer.append(XMapUtil.covertGPSLon(new XGPS(Double.parseDouble(endPointLat), Double.parseDouble(endPointLon)), system, XMapMode.XTENCENT));
 
         buffer.append("&referer=");
 
