@@ -2,9 +2,13 @@ package org.fonuhuolian.xmap.base;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.fonuhuolian.xmap.XCoordinateSystem;
+import org.fonuhuolian.xmap.XMapMode;
 import org.fonuhuolian.xmap.XMapTravelMode;
+import org.fonuhuolian.xmap.XMapUtil;
 
 /**
  * http://lbsyun.baidu.com/index.php?title=uri/api/android
@@ -13,7 +17,7 @@ public class XBaiduMap {
 
 
     public static Intent baiDuRoutePlanning(String endPointName, String endPointLat,
-                                            String endPointLon, XMapTravelMode mode) {
+                                            String endPointLon, @NonNull XMapTravelMode mode, @NonNull XCoordinateSystem system) {
 
         String endPoint = "";
 
@@ -21,13 +25,13 @@ public class XBaiduMap {
             endPoint = endPointLat + "," + endPointLon;
         }
 
-        return baiDuRoutePlanning("", "", endPointName, endPoint, mode);
+        return baiDuRoutePlanning("", "", endPointName, endPoint, mode, system);
     }
 
     public static Intent baiDuRoutePlanning(String startingPointName,
                                             String startingPointLat, String startingPointLon,
                                             String endPointName,
-                                            String endPointLat, String endPointLon, XMapTravelMode mode) {
+                                            String endPointLat, String endPointLon, @NonNull XMapTravelMode mode, @NonNull XCoordinateSystem system) {
 
         String startingPoint = "";
         String endPoint = "";
@@ -40,12 +44,14 @@ public class XBaiduMap {
             endPoint = endPointLat + "," + endPointLon;
         }
 
-        return baiDuRoutePlanning(startingPointName, startingPoint, endPointName, endPoint, mode);
+        return baiDuRoutePlanning(startingPointName, startingPoint, endPointName, endPoint, mode, system);
     }
 
     // 获得百度地图路线规划的Intent
     // 起点名称或经纬度，或者可同时提供名称和经纬度，此时经纬度优先级高
-    private static Intent baiDuRoutePlanning(String startingPointName, String startingPoint, String endPointName, String endPoint, XMapTravelMode mode) {
+    // 出行方式
+    // 坐标系
+    private static Intent baiDuRoutePlanning(String startingPointName, String startingPoint, String endPointName, String endPoint, @NonNull XMapTravelMode mode, @NonNull XCoordinateSystem system) {
 
 
         if (!mode.getMapName().equals("百度")) {
@@ -75,7 +81,7 @@ public class XBaiduMap {
             // 起点坐标不为空 起点名称为空
 
             buffer.append("origin=");
-            buffer.append(startingPoint);
+            buffer.append(XMapUtil.covertGPS(startingPoint, system, XMapMode.XBAIDU).toString());
             buffer.append("&");
 
         } else if (!TextUtils.isEmpty(startingPointName) && !TextUtils.isEmpty(startingPoint)) {
@@ -85,7 +91,7 @@ public class XBaiduMap {
             buffer.append("origin=name:");
             buffer.append(startingPointName);
             buffer.append("|latlng:");
-            buffer.append(startingPoint);
+            buffer.append(XMapUtil.covertGPS(startingPoint, system, XMapMode.XBAIDU).toString());
             buffer.append("&");
         }
 
@@ -104,7 +110,7 @@ public class XBaiduMap {
             // destination=40.057406655722,116.2964407172
 
             buffer.append("destination=");
-            buffer.append(endPoint);
+            buffer.append(XMapUtil.covertGPS(endPoint, system, XMapMode.XBAIDU).toString());
             buffer.append("&");
 
         } else if (!TextUtils.isEmpty(endPointName) && !TextUtils.isEmpty(endPoint)) {
@@ -114,7 +120,7 @@ public class XBaiduMap {
             buffer.append("destination=name:");
             buffer.append(endPointName);
             buffer.append("|latlng:");
-            buffer.append(endPoint);
+            buffer.append(XMapUtil.covertGPS(endPoint, system, XMapMode.XBAIDU).toString());
             buffer.append("&");
 
         }
