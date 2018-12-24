@@ -2,9 +2,14 @@ package org.fonuhuolian.xmap.base;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.fonuhuolian.xmap.XCoordinateSystem;
+import org.fonuhuolian.xmap.XMapMode;
 import org.fonuhuolian.xmap.XMapTravelMode;
+import org.fonuhuolian.xmap.XMapUtil;
+import org.fonuhuolian.xmap.gps.XGPS;
 
 /**
  * https://lbs.qq.com/uri_v1/index.html
@@ -12,14 +17,14 @@ import org.fonuhuolian.xmap.XMapTravelMode;
 public class XTencentMap {
 
 
-    public static Intent tencentPlanning(String endPointName, String endPointLat, String endPointLon, XMapTravelMode mode) {
+    public static Intent tencentPlanning(String endPointName, String endPointLat, String endPointLon, @NonNull XMapTravelMode mode, @NonNull XCoordinateSystem system) {
         return tencentPlanning("", "", "", endPointName,
-                endPointLat, endPointLon, mode);
+                endPointLat, endPointLon, mode, system);
     }
 
     // 获得高德地图路线规划的Intent
     public static Intent tencentPlanning(String startingPointName, String startingPointLat, String startingPointLon,
-                                         String endPointName, String endPointLat, String endPointLon, XMapTravelMode mode) {
+                                         String endPointName, String endPointLat, String endPointLon, @NonNull XMapTravelMode mode, @NonNull XCoordinateSystem system) {
 
 
         if (!mode.getMapName().equals("腾讯")) {
@@ -40,9 +45,9 @@ public class XTencentMap {
 
         if (!TextUtils.isEmpty(startingPointLat) && !TextUtils.isEmpty(startingPointLon)) {
             buffer.append("fromcoord=");
-            buffer.append(startingPointLat);
+            buffer.append(XMapUtil.covertGPSLat(new XGPS(Double.parseDouble(startingPointLat), Double.parseDouble(startingPointLon)), system, XMapMode.XAMAP));
             buffer.append(",");
-            buffer.append(startingPointLon);
+            buffer.append(XMapUtil.covertGPSLon(new XGPS(Double.parseDouble(startingPointLat), Double.parseDouble(startingPointLon)), system, XMapMode.XAMAP));
         } else {
             buffer.append("fromcoord=CurrentLocation");
         }
@@ -61,9 +66,9 @@ public class XTencentMap {
             throw new RuntimeException("终点的经纬度不能为空");
         }
 
-        buffer.append(endPointLat);
+        buffer.append(XMapUtil.covertGPSLat(new XGPS(Double.parseDouble(endPointLat), Double.parseDouble(endPointLon)), system, XMapMode.XAMAP));
         buffer.append(",");
-        buffer.append(endPointLon);
+        buffer.append(XMapUtil.covertGPSLon(new XGPS(Double.parseDouble(endPointLat), Double.parseDouble(endPointLon)), system, XMapMode.XAMAP));
 
         buffer.append("&referer=");
 
