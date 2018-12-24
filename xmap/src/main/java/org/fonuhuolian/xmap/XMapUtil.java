@@ -3,11 +3,14 @@ package org.fonuhuolian.xmap;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.fonuhuolian.xmap.base.XAMap;
 import org.fonuhuolian.xmap.base.XBaiduMap;
 import org.fonuhuolian.xmap.base.XTencentMap;
+import org.fonuhuolian.xmap.gps.XGPS;
+import org.fonuhuolian.xmap.gps.XGPSConverterUtils;
 
 import java.text.DecimalFormat;
 
@@ -17,20 +20,20 @@ public class XMapUtil {
     /**
      * 出行规划
      */
-    public static Intent xMapPlanningByAutoLocation(String endPointName, String endPointLat, String endPointLon, XMapMode map, XMapTravelMode mode) {
+    public static Intent xMapPlanningByAutoLocation(String endPointName, String endPointLat, String endPointLon, XMapMode map, @NonNull XMapTravelMode mode, @NonNull XCoordinateSystem system) {
 
         Intent intent = null;
 
         switch (map) {
 
             case XAMAP:
-                intent = XAMap.amapPlanning(endPointName, endPointLat, endPointLon, mode);
+                intent = XAMap.amapPlanning(endPointName, endPointLat, endPointLon, mode, system);
                 break;
             case XBAIDU:
-                intent = XBaiduMap.baiDuRoutePlanning(endPointName, endPointLat, endPointLon, mode);
+                intent = XBaiduMap.baiDuRoutePlanning(endPointName, endPointLat, endPointLon, mode, system);
                 break;
             case XTENCENT:
-                intent = XTencentMap.tencentPlanning(endPointName, endPointLat, endPointLon, mode);
+                intent = XTencentMap.tencentPlanning(endPointName, endPointLat, endPointLon, mode, system);
                 break;
 
         }
@@ -39,19 +42,19 @@ public class XMapUtil {
     }
 
     public static Intent xMapPlanning(String startingPointName, String startingPointLat, String startingPointLon,
-                                      String endPointName, String endPointLat, String endPointLon, XMapMode map, XMapTravelMode mode) {
+                                      String endPointName, String endPointLat, String endPointLon, XMapMode map, @NonNull XMapTravelMode mode, @NonNull XCoordinateSystem system) {
         Intent intent = null;
 
         switch (map) {
 
             case XAMAP:
-                intent = XAMap.amapPlanning(startingPointName, startingPointLat, startingPointLon, endPointName, endPointLat, endPointLon, mode);
+                intent = XAMap.amapPlanning(startingPointName, startingPointLat, startingPointLon, endPointName, endPointLat, endPointLon, mode, system);
                 break;
             case XBAIDU:
-                intent = XBaiduMap.baiDuRoutePlanning(startingPointName, startingPointLat, startingPointLon, endPointName, endPointLat, endPointLon, mode);
+                intent = XBaiduMap.baiDuRoutePlanning(startingPointName, startingPointLat, startingPointLon, endPointName, endPointLat, endPointLon, mode, system);
                 break;
             case XTENCENT:
-                intent = XTencentMap.tencentPlanning(startingPointName, startingPointLat, startingPointLon, endPointName, endPointLat, endPointLon, mode);
+                intent = XTencentMap.tencentPlanning(startingPointName, startingPointLat, startingPointLon, endPointName, endPointLat, endPointLon, mode, system);
                 break;
 
         }
@@ -89,6 +92,94 @@ public class XMapUtil {
         }
 
         return MapUtils.checkApkExist(context, packageName);
+    }
+
+    /**
+     * 返回正确的坐标
+     *
+     * @param xGps      要转换的GPS
+     * @param gpsSystem 此gps所属坐标系
+     * @param finalMap  目的地图
+     * @return
+     */
+    public static XGPS covertGPS(XGPS xGps, XCoordinateSystem gpsSystem, XMapMode finalMap) {
+
+        XGPS converXGPS = null;
+
+        if (gpsSystem == XCoordinateSystem.BAIDU_SYSETEM) {
+            // 当前的坐标系为百度坐标系
+            switch (finalMap) {
+                case XBAIDU:
+                    // 无需转换
+                    converXGPS = xGps;
+                    break;
+                case XAMAP:
+                case XTENCENT:
+                    converXGPS = XGPSConverterUtils.bd09_To_Gcj02(xGps.getLat(), xGps.getLon());
+                    break;
+            }
+
+        } else if (gpsSystem == XCoordinateSystem.AMAP_TENCENT_MARS_SYSTEM) {
+            // 当前的坐标系为高德、腾讯的火星坐标系
+            switch (finalMap) {
+                case XBAIDU:
+                    converXGPS = XGPSConverterUtils.gcj02_To_Bd09(xGps.getLat(), xGps.getLon());
+                    break;
+                case XAMAP:
+                    // 无需转换
+                    converXGPS = xGps;
+                    break;
+                case XTENCENT:
+                    // 无需转换
+                    converXGPS = xGps;
+                    break;
+            }
+        }
+
+        return converXGPS;
+    }
+
+    public static XGPS covertGPS(String xGps, XCoordinateSystem gpsSystem, XMapMode finalMap) {
+
+        String[] split = xGps.split(",", -1);
+
+        if (split.length != 2) {
+            throw new RuntimeException("GPS格式为：lat,lon");
+        }
+
+        return covertGPS(new XGPS(Double.parseDouble(split[0]), Double.parseDouble(split[1])), gpsSystem, finalMap);
+    }
+
+    public static double covertGPSLat(XGPS xGps, XCoordinateSystem gpsSystem, XMapMode finalMap) {
+
+        return covertGPS(xGps, gpsSystem, finalMap).getLat();
+    }
+
+    public static double covertGPSLat(String xGps, XCoordinateSystem gpsSystem, XMapMode finalMap) {
+
+        String[] split = xGps.split(",", -1);
+
+        if (split.length != 2) {
+            throw new RuntimeException("GPS格式为：lat,lon");
+        }
+
+        return covertGPS(new XGPS(Double.parseDouble(split[0]), Double.parseDouble(split[1])), gpsSystem, finalMap).getLat();
+    }
+
+    public static double covertGPSLon(XGPS xGps, XCoordinateSystem gpsSystem, XMapMode finalMap) {
+
+        return covertGPS(xGps, gpsSystem, finalMap).getLon();
+    }
+
+    public static double covertGPSLon(String xGps, XCoordinateSystem gpsSystem, XMapMode finalMap) {
+
+        String[] split = xGps.split(",", -1);
+
+        if (split.length != 2) {
+            throw new RuntimeException("GPS格式为：lat,lon");
+        }
+
+        return covertGPS(new XGPS(Double.parseDouble(split[0]), Double.parseDouble(split[1])), gpsSystem, finalMap).getLon();
     }
 
 
