@@ -2,9 +2,14 @@ package org.fonuhuolian.xmap.base;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.fonuhuolian.xmap.XCoordinateSystem;
+import org.fonuhuolian.xmap.XMapMode;
 import org.fonuhuolian.xmap.XMapTravelMode;
+import org.fonuhuolian.xmap.XMapUtil;
+import org.fonuhuolian.xmap.gps.XGPS;
 
 /**
  * https://lbs.amap.com/api/amap-mobile/summary
@@ -12,14 +17,14 @@ import org.fonuhuolian.xmap.XMapTravelMode;
 public class XAMap {
 
 
-    public static Intent amapPlanning(String endPointName, String endPointLat, String endPointLon, XMapTravelMode mode) {
+    public static Intent amapPlanning(String endPointName, String endPointLat, String endPointLon, @NonNull XMapTravelMode mode, @NonNull XCoordinateSystem system) {
         return amapPlanning("", "", "",
-                endPointName, endPointLat, endPointLon, mode);
+                endPointName, endPointLat, endPointLon, mode, system);
     }
 
     // 获得高德地图路线规划的Intent
     public static Intent amapPlanning(String startingPointName, String startingPointLat, String startingPointLon,
-                                      String endPointName, String endPointLat, String endPointLon, XMapTravelMode mode) {
+                                      String endPointName, String endPointLat, String endPointLon, @NonNull XMapTravelMode mode, @NonNull XCoordinateSystem system) {
 
         if (!mode.getMapName().equals("高德")) {
             throw new RuntimeException("选择的出行模式与调用的地图不符");
@@ -29,14 +34,13 @@ public class XAMap {
 
         if (!TextUtils.isEmpty(startingPointLat) && !TextUtils.isEmpty(startingPointLon)) {
             buffer.append("slat=");
-            buffer.append(startingPointLat);
+            buffer.append(XMapUtil.covertGPSLat(new XGPS(Double.parseDouble(startingPointLat), Double.parseDouble(startingPointLon)), system, XMapMode.XAMAP));
             buffer.append("&slon=");
-            buffer.append(startingPointLon);
+            buffer.append(XMapUtil.covertGPSLon(new XGPS(Double.parseDouble(startingPointLat), Double.parseDouble(startingPointLon)), system, XMapMode.XAMAP));
             buffer.append("&");
         }
 
         if (!TextUtils.isEmpty(startingPointName)) {
-
             buffer.append("sname=");
             buffer.append(startingPointName);
             buffer.append("&");
@@ -48,9 +52,9 @@ public class XAMap {
         }
 
         buffer.append("dlat=");
-        buffer.append(endPointLat);
+        buffer.append(XMapUtil.covertGPSLat(new XGPS(Double.parseDouble(endPointLat), Double.parseDouble(endPointLon)), system, XMapMode.XAMAP));
         buffer.append("&dlon=");
-        buffer.append(endPointLon);
+        buffer.append(XMapUtil.covertGPSLon(new XGPS(Double.parseDouble(endPointLat), Double.parseDouble(endPointLon)), system, XMapMode.XAMAP));
         buffer.append("&");
 
         if (!TextUtils.isEmpty(endPointName)) {
