@@ -19,6 +19,13 @@ public class XMapUtil {
 
     /**
      * 出行规划
+     * @param endPointName   终点名称
+     * @param endPointLat    终点纬度
+     * @param endPointLon    终点经度
+     * @param map            用哪款地图去导航
+     * @param mode           出行方式
+     * @param system         终点的坐标 是何坐标系
+     * @return
      */
     public static Intent xMapPlanningByAutoLocation(String endPointName, String endPointLat, String endPointLon, XMapMode map, @NonNull XMapTravelMode mode, @NonNull XCoordinateSystem system) {
 
